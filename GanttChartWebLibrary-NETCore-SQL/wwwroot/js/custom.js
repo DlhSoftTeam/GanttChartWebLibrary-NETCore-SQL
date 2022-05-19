@@ -49,7 +49,6 @@ function insertNewGanttChartItem() {
         ganttChartView.selectItem(item);
         ganttChartView.scrollToItem(item);
         ganttChartView.scrollToDateTime(item.start);
-        ganttChartView.refresh();
     });
 }
 function deleteGanttChartItem() {
