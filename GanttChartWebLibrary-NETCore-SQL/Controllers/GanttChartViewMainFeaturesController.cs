@@ -89,11 +89,14 @@ namespace GanttChartWebLibrary_NETCore_SQL.Controllers
                 // Add new and update existing predecessors based on the view.
                 foreach (PredecessorItem predecessorItem in item.Predecessors)
                 {
-                    var predecessorTaskID = context.Tasks.Single(t => t.Index == predecessorItem.ItemIndex).Id;
+                    var predecessorTask = context.Tasks.SingleOrDefault(t => t.Index == predecessorItem.ItemIndex);
+                    if (predecessorTask == null)
+                        continue;
+                    var predecessorTaskID = predecessorTask.Id;
                     var predecessor = task.Predecessors.Where(p => p.PredecessorTaskId == predecessorTaskID).SingleOrDefault();
                     if (predecessor == null) // create new predecessor if needed
                     {
-                        predecessor = new Predecessor { PredecessorTaskId = predecessorTaskID };
+                        predecessor = new Predecessor { PredecessorTaskId = (int)predecessorTaskID };
                         task.Predecessors.Add(predecessor);
                     }
                     predecessor.DependencyType = (int)predecessorItem.DependencyType;
@@ -129,7 +132,6 @@ namespace GanttChartWebLibrary_NETCore_SQL.Controllers
                 };
                 context.Tasks.Add(task);
                 context.SaveChanges();
-
                 return Ok(task.Id);
             }
         }
@@ -141,6 +143,9 @@ namespace GanttChartWebLibrary_NETCore_SQL.Controllers
                 var task = context.Tasks.Include(t => t.Predecessors).Include(t => t.Successors).SingleOrDefault(t => t.Id == id);
                 if (task == null)
                     return NotFound();
+                var tasks = context.Tasks.Where(t => t.Index > task.Index).ToArray();
+                foreach (var t in tasks)
+                    t.Index--;
                 var predecessors = task.Predecessors;
                 var successors = task.Successors;
                 foreach (var predecessor in predecessors)

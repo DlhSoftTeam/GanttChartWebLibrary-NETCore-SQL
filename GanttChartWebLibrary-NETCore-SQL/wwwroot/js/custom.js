@@ -26,6 +26,7 @@ function addNewGanttChartItem() {
         ganttChartView.selectItem(item);
         ganttChartView.scrollToItem(item);
         ganttChartView.scrollToDateTime(item.start);
+        item.itemIndex = item.index;
     });
 }
 function insertNewGanttChartItem() {
@@ -44,11 +45,16 @@ function insertNewGanttChartItem() {
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify(item)
     }).then(response => response.json()).then(taskId => {
+        var index = selectedItem.index;
         item.key = taskId;
-        ganttChartView.insertItem(selectedItem.index, item);
+        ganttChartView.insertItem(index, item);
         ganttChartView.selectItem(item);
         ganttChartView.scrollToItem(item);
         ganttChartView.scrollToDateTime(item.start);
+        for (var i = index; i < ganttChartView.items.length; i++) {
+            var it = ganttChartView.items[i];
+            it.itemIndex = it.index;
+        }
     });
 }
 function deleteGanttChartItem() {
@@ -58,8 +64,14 @@ function deleteGanttChartItem() {
     if (!confirm("Are you sure you want to delete the selected task?"))
         return;
     fetch(controllerPath + '/DeleteGanttChartItem?id=' + selectedItem.key).then(response => {
-        if (response.ok)
+        if (response.ok) {
+            var index = selectedItem.index;
             ganttChartView.removeItem(selectedItem);
+            for (var i = index; i < ganttChartView.items.length; i++) {
+                var it = ganttChartView.items[i];
+                it.itemIndex = it.index;
+            }
+        }
     });
 }
 function increaseGanttChartItemIndentation() {
@@ -101,11 +113,16 @@ function pasteItem() {
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify(item)
     }).then(response => response.json()).then(taskId => {
+        var index = selectedItem.index;
         item.key = taskId;
-        ganttChartView.insertItem(selectedItem.index + 1, item);
+        ganttChartView.insertItem(index + 1, item);
         ganttChartView.selectItem(item);
         ganttChartView.scrollToItem(item);
         ganttChartView.scrollToDateTime(item.start);
+        for (var i = index + 1; i < ganttChartView.items.length; i++) {
+            var it = ganttChartView.items[i];
+            it.itemIndex = it.index;
+        }
     });
 }
 var date = new Date(), year = date.getFullYear(), month = date.getMonth();
