@@ -1,3 +1,5 @@
+System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

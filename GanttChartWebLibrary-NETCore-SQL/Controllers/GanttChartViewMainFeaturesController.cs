@@ -2,7 +2,6 @@
 using GanttChartWebLibrary_NETCore_SQL.Models.DB;
 using DlhSoft.Web.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace GanttChartWebLibrary_NETCore_SQL.Controllers
 {
