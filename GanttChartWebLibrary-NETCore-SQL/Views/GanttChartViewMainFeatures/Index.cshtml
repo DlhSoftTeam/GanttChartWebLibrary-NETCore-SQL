@@ -78,7 +78,7 @@
             DateTime projectStart = component.GetProjectStart(), projectFinish = component.GetProjectFinish();
             component.TimelineStart = projectStart.Date.AddDays(-1);
             component.TimelineFinish = projectFinish.Date.AddDays(1).AddMonths(3);
-            component.CurrentTime = projectStart.Date.AddDays(2).AddHours(10);
+            component.CurrentTime = projectStart.Date.AddDays(3).AddHours(10);
             component.DisplayedTime = projectStart.Date.AddDays(-1);
 
             component.Height = "450px";
